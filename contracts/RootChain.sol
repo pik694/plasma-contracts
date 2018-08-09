@@ -10,6 +10,7 @@ import "./PriorityQueue.sol";
 import "./ERC20.sol";
 
 
+
 /**
  * @title RootChain
  * @dev This contract secures a utxo payments plasma child chain to ethereum.
@@ -54,6 +55,7 @@ contract RootChain {
     uint256 public constant CHILD_BLOCK_INTERVAL = 1000;
 
     address public operator;
+    address public feeBurner;
 
     uint256 public currentChildBlock;
     uint256 public currentDepositBlock;
@@ -89,10 +91,14 @@ contract RootChain {
      * Constructor
      */
 
-    constructor()
+    constructor(address _feeBurner)
         public
     {
+        require(_feeBurner != msg.sender);
+
         operator = msg.sender;
+        feeBurner = _feeBurner;
+
         currentChildBlock = CHILD_BLOCK_INTERVAL;
         currentDepositBlock = 1;
         currentFeeExit = 1;
@@ -196,7 +202,7 @@ contract RootChain {
         public
         onlyOperator
     {
-        addExitToQueue(currentFeeExit, msg.sender, _token, _amount, block.timestamp + 1);
+        addExitToQueue(currentFeeExit, feeBurner, _token, _amount, block.timestamp + 1);
         currentFeeExit = currentFeeExit.add(1);
     }
 
