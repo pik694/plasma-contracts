@@ -3,7 +3,8 @@ from ethereum.tools.tester import TransactionFailed
 from plasma_core.utils.transactions import encode_utxo_id
 from plasma_core.utils.address import address_to_bytes
 from plasma_core.utils.utils import get_deposit_hash
-from plasma_core.constants import NULL_ADDRESS, NULL_ADDRESS_HEX, WEEK
+from plasma_core.constants import NULL_ADDRESS, NULL_ADDRESS_HEX, WEEK, FEE_BURNER_ADDRESS
+
 
 
 # add token
@@ -102,7 +103,7 @@ def test_start_fee_exit_should_succeed(testlang):
     fee_exit_id = testlang.start_fee_exit(operator, amount)
 
     plasma_exit = testlang.get_plasma_exit(fee_exit_id)
-    assert plasma_exit.owner == operator.address
+    assert plasma_exit.owner == FEE_BURNER_ADDRESS
     assert plasma_exit.token == NULL_ADDRESS_HEX
     assert plasma_exit.amount == amount
 
