@@ -55,7 +55,7 @@ contract RootChain {
     uint256 public constant CHILD_BLOCK_INTERVAL = 1000;
 
     address public operator;
-    address public fees_receiver;
+    address public feesReceiver;
 
     uint256 public currentChildBlock;
     uint256 public currentDepositBlock;
@@ -92,12 +92,12 @@ contract RootChain {
      *
      * @param _fees_receiver specifies address to which fees will be sent
      */
-    constructor(address _fees_receiver)
+    constructor(address _feesReceiver)
         public
     {
 
         operator = msg.sender;
-        fees_receiver = _fees_receiver;
+        feesReceiver = _feesReceiver;
 
         currentChildBlock = CHILD_BLOCK_INTERVAL;
         currentDepositBlock = 1;
@@ -202,7 +202,7 @@ contract RootChain {
         public
         onlyOperator
     {
-        addExitToQueue(currentFeeExit, fees_receiver, _token, _amount, block.timestamp + 1);
+        addExitToQueue(currentFeeExit, feesReceiver, _token, _amount, block.timestamp + 1);
         currentFeeExit = currentFeeExit.add(1);
     }
 
