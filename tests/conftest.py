@@ -6,7 +6,7 @@ from ethereum.abi import ContractTranslator
 from ethereum.config import config_metropolis
 from solc_simple import Deployer
 from testlang.testlang import TestingLanguage
-from plasma_core.constants import FEE_BURNER_ADDRESS
+from plasma_core.constants import FEE_BURNER_ADDRESS, WEEK
 
 GAS_LIMIT = 8000000
 START_GAS = GAS_LIMIT - 1000000
@@ -47,7 +47,7 @@ def get_contract(ethtester, ethutils):
 
 @pytest.fixture
 def root_chain(ethtester, get_contract):
-    contract = get_contract('RootChain', args=[FEE_BURNER_ADDRESS])
+    contract = get_contract('RootChain', args=[FEE_BURNER_ADDRESS, WEEK])
     ethtester.chain.mine()
     return contract
 

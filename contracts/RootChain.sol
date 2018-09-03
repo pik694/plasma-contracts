@@ -57,6 +57,8 @@ contract RootChain {
     address public operator;
     address public feesReceiver;
 
+    uint256 public exitDelayPeriod; // in seconds
+
     uint256 public currentChildBlock;
     uint256 public currentDepositBlock;
     uint256 public currentFeeExit;
@@ -91,13 +93,15 @@ contract RootChain {
      * Constructor
      *
      * @param _fees_receiver specifies address to which fees will be sent
+     * @param _exitDelayPeriod specifies exits' adolescence period in seconds
      */
-    constructor(address _feesReceiver)
+    constructor(address _feesReceiver, uint _exitDelayPeriod)
         public
     {
 
         operator = msg.sender;
         feesReceiver = _feesReceiver;
+        exitDelayPeriod = _exitDelayPeriod;
 
         currentChildBlock = CHILD_BLOCK_INTERVAL;
         currentDepositBlock = 1;
@@ -421,7 +425,7 @@ contract RootChain {
         require(exitsQueues[_token] != address(0));
 
         // Calculate priority.
-        uint256 exitable_at = Math.max(_created_at + 2 weeks, block.timestamp + 1 weeks);
+        uint256 exitable_at = Math.max(_created_at + exitDelayPeriod.mul(2), block.timestamp + exitDelayPeriod);
         uint256 priority = exitable_at << 128 | _utxoPos;
 
         // Check exit is valid and doesn't already exist.
